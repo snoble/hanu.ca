@@ -1,0 +1,28 @@
+{
+  "name": "hanu.ca",
+  "version": "0.1.0",
+  "main": "index.js",
+  "repository": "git@github.com:snoble/hanu.ca.git",
+  "author": "Steven Henry Klaiber-Noble <steven.noble@gmail.com>",
+  "devDependencies": {
+    "cssnano": "^4.1.10",
+    "elm-hot": "^1.1.4",
+    "node-elm-compiler": "^5.0.4",
+    "parcel-bundler": "^1.12.4",
+    "parcel-plugin-static-files-copy": "^2.4.3"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "scripts": {
+    "dev": "parcel index.html",
+    "build": "parcel build index.html"
+  },
+  "dependencies": {
+    "elm": "^0.19.1-no-deps"
+  },
+  "staticFiles": {
+    "staticPath": "static",
+    "watcherGlog": "**"
+  }
+}
