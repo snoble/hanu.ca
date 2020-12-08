@@ -46,6 +46,15 @@ embeds =
             , attribute "allowfullscreen" "true"
             ]
             []
+          , iframe
+            [ style "width" "100%"
+            , style "height" "100%"
+            , src "https://www.youtube.com/embed/BeS46weU4ZI"
+            , style "frameborder" "0"
+            , attribute "allow" "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            , attribute "allowfullscreen" "true"
+            ]
+            []
         ]
     }
 
