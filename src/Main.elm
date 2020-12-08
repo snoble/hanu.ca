@@ -28,7 +28,7 @@ embeds =
             , attribute "allowfullscreen" "true"
             ]
             []
-         , iframe
+        , iframe
             [ style "width" "100%"
             , style "height" "100%"
             , src "https://www.youtube.com/embed/gbxyZAduGvY"
@@ -37,7 +37,7 @@ embeds =
             , attribute "allowfullscreen" "true"
             ]
             []
-         , iframe
+        , iframe
             [ style "width" "100%"
             , style "height" "100%"
             , src "https://www.youtube.com/embed/VT2_7aq3ytE"
@@ -46,7 +46,7 @@ embeds =
             , attribute "allowfullscreen" "true"
             ]
             []
-          , iframe
+        , iframe
             [ style "width" "100%"
             , style "height" "100%"
             , src "https://www.youtube.com/embed/BeS46weU4ZI"
@@ -55,7 +55,7 @@ embeds =
             , attribute "allowfullscreen" "true"
             ]
             []
-          , iframe
+        , iframe
             [ style "width" "100%"
             , style "height" "100%"
             , src "https://www.youtube.com/embed/7U0k_vHxc2k"
