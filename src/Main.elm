@@ -1,15 +1,35 @@
-module Main exposing (main)
+port module Main exposing (main)
 
 import Browser exposing (element)
 import Html exposing (Html, iframe, text)
 import Html.Attributes exposing (attribute, src, style)
+import Json.Decode as D
+import Json.Encode as E
 import Maybe
 import Random
 
 
-youtubeIframe : String -> Html Msg
+filterEncoder =
+    E.list E.string
+
+
+filterDecoder =
+    D.list D.string
+
+
+port responseFilter : (String -> msg) -> Sub msg
+
+
+port requestFilter : () -> Cmd msg
+
+
+port setFilter : String -> Cmd msg
+
+
+youtubeIframe : String -> ( String, Html Msg )
 youtubeIframe id =
-    iframe
+    ( id
+    , iframe
         [ style "width" "100%"
         , style "height" "100%"
         , src ([ "https://www.youtube-nocookie.com/embed/", id ] |> String.join "")
@@ -18,9 +38,10 @@ youtubeIframe id =
         , attribute "allowfullscreen" "true"
         ]
         []
+    )
 
 
-embeds : { head : Html Msg, rest : List (Html Msg) }
+embeds : { head : ( String, Html Msg ), rest : List ( String, Html Msg ) }
 embeds =
     { head = youtubeIframe "qSJCSR4MuhU"
     , rest =
@@ -34,7 +55,8 @@ embeds =
 
 
 type Msg
-    = HtmlUpdate (Html Msg)
+    = ReceiveFilter String
+    | RandomResult (List String) ( String, Html Msg )
 
 
 type alias Model =
@@ -42,17 +64,25 @@ type alias Model =
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
-update msg _ =
+update msg model =
     case msg of
-        HtmlUpdate html ->
-            ( Maybe.Just html, Cmd.none )
+        RandomResult filter ( id, html ) ->
+            ( Maybe.Just html, setFilter (filterEncoder (id :: filter) |> E.encode 0) )
+
+        ReceiveFilter filterString ->
+            case D.decodeString filterDecoder filterString of
+                Result.Ok filter ->
+                    ( model, Random.uniform embeds.head embeds.rest |> Random.generate (RandomResult filter) )
+
+                _ ->
+                    ( model, Random.uniform embeds.head embeds.rest |> Random.generate (RandomResult []) )
 
 
 main : Program () Model Msg
 main =
     element
-        { init = \_ -> ( Maybe.Nothing, Random.uniform embeds.head embeds.rest |> Random.generate HtmlUpdate )
+        { init = \_ -> ( Maybe.Nothing, requestFilter () )
         , view = Maybe.withDefault (text "")
         , update = update
-        , subscriptions = \_ -> Sub.none
+        , subscriptions = \_ -> responseFilter ReceiveFilter
         }
