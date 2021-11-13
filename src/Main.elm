@@ -20,6 +20,7 @@ youtubeIframe id =
         []
 
 
+embeds : { head : Html Msg, rest : List (Html Msg) }
 embeds =
     { head = youtubeIframe "qSJCSR4MuhU"
     , rest =
@@ -27,7 +28,6 @@ embeds =
         , youtubeIframe "gbxyZAduGvY"
         , youtubeIframe "VT2_7aq3ytE"
         , youtubeIframe "BeS46weU4ZI"
-        , youtubeIframe "7U0k_vHxc2k"
         , youtubeIframe "GJdm3c83L0w"
         ]
     }
