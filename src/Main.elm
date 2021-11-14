@@ -9,10 +9,12 @@ import Maybe
 import Random
 
 
+filterEncoder : List String -> E.Value
 filterEncoder =
     E.list E.string
 
 
+filterDecoder : D.Decoder (List String)
 filterDecoder =
     D.list D.string
 
@@ -41,17 +43,15 @@ youtubeIframe id =
     )
 
 
-embeds : { head : ( String, Html Msg ), rest : List ( String, Html Msg ) }
+embeds : List ( String, Html Msg )
 embeds =
-    { head = youtubeIframe "qSJCSR4MuhU"
-    , rest =
-        [ youtubeIframe "9320tG1bQaY"
-        , youtubeIframe "gbxyZAduGvY"
-        , youtubeIframe "VT2_7aq3ytE"
-        , youtubeIframe "BeS46weU4ZI"
-        , youtubeIframe "GJdm3c83L0w"
-        ]
-    }
+    [ youtubeIframe "qSJCSR4MuhU"
+    , youtubeIframe "9320tG1bQaY"
+    , youtubeIframe "gbxyZAduGvY"
+    , youtubeIframe "VT2_7aq3ytE"
+    , youtubeIframe "BeS46weU4ZI"
+    , youtubeIframe "GJdm3c83L0w"
+    ]
 
 
 type Msg
@@ -72,10 +72,25 @@ update msg model =
         ReceiveFilter filterString ->
             case D.decodeString filterDecoder filterString of
                 Result.Ok filter ->
-                    ( model, Random.uniform embeds.head embeds.rest |> Random.generate (RandomResult filter) )
+                    case embeds |> List.filter (\( id, _ ) -> not (filter |> List.member id)) of
+                        [] ->
+                            ( model, updateEmbeds embeds [] )
+
+                        filtered ->
+                            ( model, updateEmbeds filtered filter )
 
                 _ ->
-                    ( model, Random.uniform embeds.head embeds.rest |> Random.generate (RandomResult []) )
+                    ( model, updateEmbeds embeds [] )
+
+
+updateEmbeds : List ( String, Html Msg ) -> List String -> Cmd.Cmd Msg
+updateEmbeds e filter =
+    case e of
+        head :: rest ->
+            Random.uniform head rest |> Random.generate (RandomResult filter)
+
+        _ ->
+            Cmd.none
 
 
 main : Program () Model Msg
