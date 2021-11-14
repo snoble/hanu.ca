@@ -51,6 +51,8 @@ embeds =
     , youtubeIframe "VT2_7aq3ytE"
     , youtubeIframe "BeS46weU4ZI"
     , youtubeIframe "GJdm3c83L0w"
+    , youtubeIframe "DtlLHwk9_Rw"
+    , youtubeIframe "rebljtYev-M"
     ]
 
 
