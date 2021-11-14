@@ -74,7 +74,16 @@ update msg model =
                 Result.Ok filter ->
                     case embeds |> List.filter (\( id, _ ) -> not (filter |> List.member id)) of
                         [] ->
-                            ( model, updateEmbeds embeds [] )
+                            let
+                                subfilter =
+                                    filter |> List.take 2
+                            in
+                            case embeds |> List.filter (\( id, _ ) -> not (subfilter |> List.member id)) of
+                                [] ->
+                                    ( model, updateEmbeds embeds [] )
+
+                                filtered ->
+                                    ( model, updateEmbeds filtered subfilter )
 
                         filtered ->
                             ( model, updateEmbeds filtered filter )
